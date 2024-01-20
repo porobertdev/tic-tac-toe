@@ -18,3 +18,20 @@ const gameBoard = (function () {
         getBoard
     };
 })();
+
+const gameController = (function() {
+
+    // get board
+    const board = gameBoard.getBoard();
+
+    // create players
+    function createPlayer(name, mark) {
+        return {name, mark};
+    }
+
+    const player1 = createPlayer('player1', 'X');
+    const player2 = createPlayer('player2', 'O');
+
+    // set first player
+    let currPlayer = player1;
+})();
