@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
+
+:root {
+    --clr-border: #D8D8D8;
+    --clr-red: #FF7474;
+    --clr-blue: #7CA8FF;
+}
+
+body {
+    font-family: 'Inter';
+}
+
+.flex {
+    display: flex;
+
+    &.flex-jc-c {
+        justify-content: center;
+    }
+
+    &.flex-ai-c {
+        align-items: center;
+    }
+
+    &.flex-d-c {
+        flex-direction: column;
+    }
+}
+
+.game-container {
+    width: 30vw;
+    margin: 15vh auto;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.cell.border-bottom {
+    border-bottom: 5px solid var(--clr-border);
+}
+
+.cell.border-right {
+    border-right: 5px solid var(--clr-border);
+}
+
+.cell {
+    padding: 1rem;
+}
+
+.cell img {
+    width: 100%;
+    height: 5rem;
+}
+
+.game-status {
+    margin-top: 3rem;
+    gap: 0.6rem;
+}
+
+.rectangle {
+    background-color: var(--clr-red);
+    color: white;
+    
+    padding: 0.6rem;
+    border-radius: 100px;
+    gap: 0.8rem;
+}
+
+.rectangle img {
+    width: 1.5rem;
+}
+
+.score {
+    font-size: 1.8rem;
+}
+
+.score.player1 {
+    color: var(--clr-blue);
+}
+
+.score.player2 {
+    color: var(--clr-red);
+}
