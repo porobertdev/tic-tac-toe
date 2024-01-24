@@ -72,6 +72,17 @@ body {
     width: 1.5rem;
 }
 
+.rectangle.player1 {
+    background-color: var(--clr-blue);
+    flex-direction: row-reverse;
+    transition: 1s;
+}
+
+.rectangle.player2 {
+    background-color: var(--clr-red);
+    transition: 1s;
+}
+
 .score {
     font-size: 1.8rem;
 }

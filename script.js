@@ -68,12 +68,13 @@ const gameController = (function() {
         return {name, mark, score, updateScore};
     }
 
-    const player1 = createPlayer('player1', 'X');
-    const player2 = createPlayer('player2', 'O');
-
+    const player1 = createPlayer('player1', 'x');
+    const player2 = createPlayer('player2', 'o');
     // set first player
     let currPlayer = player1;
+
     const boardSize = gameBoard.getSize().columns;
+    const rectangle = document.querySelector('.game-status .rectangle');
     let combos;
     let markCount;
     manageEvent('add');
@@ -99,7 +100,14 @@ const gameController = (function() {
             event.target.appendChild(img);
         }
         checkWinner(row, cell);
-        currPlayer = (currPlayer == player1) ? player2 : player1;
+
+        // change turn
+        // rectangle.classList.add(currPlayer.name);
+        // console.log(rectangle.children[0]);
+        // rectangle.children[0].textContent = currPlayer.name; // name node
+        // rectangle.children[1].setAttribute('src', `./assets/${currPlayer.mark}-status-icon.svg`);
+        // currPlayer = (currPlayer == player1) ? player2 : player1;
+        changeTurn();
     }
 
     function manageEvent(type) {
@@ -167,6 +175,26 @@ const gameController = (function() {
                 return;
             }
         }
+    }
+
+    function changeTurn() {
+        /*
+            we need to remove the class of currPlayer first,
+            and then add the class corresponding to the next
+            player.
+
+            @TODO: find another solution because this is
+                   duplicated code.
+        */
+
+        rectangle.classList.toggle(currPlayer.name);
+        currPlayer = (currPlayer == player1) ? player2 : player1;
+        rectangle.classList.toggle(currPlayer.name);
+
+        // name node
+        rectangle.children[0].textContent = currPlayer.name;
+        // mark node
+        rectangle.children[1].setAttribute('src', `./assets/${currPlayer.mark}-status-icon.svg`);
     }
 
     return {playRound};
