@@ -1,30 +1,31 @@
-const gameBoard = (function (testBoard) {
+const gameBoard = (function () {
 
     const rows = 3;
     const columns = 3;
     
-    const board = (function() {
-        if (testBoard) {
-            return [
-                ['X', 'O', 'X'],
-                ['O', 'X', 'O'],
-                ['O', 'O', 'X']
-            ];
-        } else {
-            const arr = [];
+    function createBoard(type) {
 
-            // create rows * columns board
-            for (i = 0; i < rows; i++) {
+        const arr = (type == 'console') ? [] : Array.from(document.querySelectorAll('.cell'));
+
+        // create rows * columns board
+        for (i = 0; i < rows; i++) {
+
+            if (type == 'console') {
                 arr.push([]);
                 for (j = 0; j < columns; j++) {
                     arr[i].push('');
                 }
+            } else if (type == 'dom') {
+                // create nested arrays to match rows * columns board
+                arr.splice(i, 3, arr.slice(i, i + 3))
             }
-            return arr;
         }
-    })();
 
-    const getBoard = () => board;
+        return arr;
+    }
+
+    const console = createBoard('console');
+    const dom = createBoard('dom');
 
     const getSize = () => {
         return {rows, columns};
@@ -32,27 +33,18 @@ const gameBoard = (function (testBoard) {
 
     const getEmptyCells = () => {
         // checks if any row of the board has empty cells
-        return board.filter( row => row.includes('')).length;
+        return console.filter( row => row.includes('')).length;
     }
 
     return {
-        getBoard,
+        console,
+        dom,
         getEmptyCells,
         getSize
     };
-})(false);
+})();
 
 const gameController = (function() {
-
-    // get board
-    const board = gameBoard.getBoard();
-
-    const domBoard = Array.from(document.querySelectorAll('.cell'));
-
-    // create nested arrays to match rows * columns board
-    for (i = 0; i < 3; i++) {
-        domBoard.splice(i, 3, domBoard.slice(i, i + 3))
-    }
 
     // create players
     function createPlayer(name, mark, score = 0) {
@@ -71,7 +63,12 @@ const gameController = (function() {
         return {name, pseudo, mark, score, updateScore};
     }
 
+    // board info
+    const board = gameBoard.console;
+    const domBoard = gameBoard.dom;
     const boardSize = gameBoard.getSize().columns;
+
+    // DOM
     const gameContainer = document.querySelector('.game-container');
     const rectangle = document.querySelector('.game-status .rectangle');
     const playerName = document.querySelector('span.player-name');
@@ -79,17 +76,21 @@ const gameController = (function() {
     const inputs = document.querySelectorAll('input[type="text"]');
     const play = document.querySelector('button.play');
 
+    /*  player names are updated after starting the game,
+        but we need the objects for the event trigger
+    */
     const player1 = createPlayer('player1', 'x');
     const player2 = createPlayer('player2', 'o');
 
     // set first player
     let currPlayer = player1;
 
+    // used in checkWinner()'s loop
     let combos;
     let markCount;
 
     // add event listeners
-    ['input', 'play', 'dom'].forEach( target => manageEvent(target, 'add'));
+    manageEvent('addEventListener');
 
     function playRound(row, cell, dom) {
 
@@ -111,36 +112,23 @@ const gameController = (function() {
             img.setAttribute('src', `./assets/${currPlayer.mark.toLowerCase()}-icon.svg`);
             event.target.appendChild(img);
         }
+
         checkWinner(row, cell);
         changeTurn();
     }
 
-    function manageEvent(target, type) {
+    function manageEvent(type) {
 
-        switch (true) {
-            case (target == 'dom'):
-                domBoard.forEach( subArr => {
+        domBoard.forEach( row => {
+            row.forEach( cell => {
+                cell[type]('click', boardHandler);
+            })});
 
-                    subArr.forEach( cell => {
-                        if (type == 'add') {
-                            cell.addEventListener('click', boardHandler);
-                        } else if (type == 'remove') {
-                            cell.removeEventListener('click', boardHandler);
-                        }
-                    });
-                });
-                break;
+        inputs.forEach( input => {
+            input[type]('input', inputHandler);
+        });
         
-            case (target == 'input'):
-                inputs.forEach( input => {
-                    input.addEventListener('input', inputHandler);
-                });
-                break;
-
-            case (target == 'play'):
-                play.addEventListener('click', playHandler);
-    }
-
+        play[type]('click', playHandler);
 
         function boardHandler(e) {
             // find where the click was done
@@ -215,7 +203,7 @@ const gameController = (function() {
             if (markCount == boardSize) {
                 currPlayer.updateScore();
                 alert('YOU WON');
-                manageEvent('dom', 'remove');
+                manageEvent('removeEventListener');
                 return;
             }
         }
