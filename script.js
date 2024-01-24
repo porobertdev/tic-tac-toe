@@ -72,19 +72,23 @@ const gameController = (function() {
     function playRound(row, cell, dom) {
 
         if (gameBoard.getEmptyCells() == 0) {
-            // game ends
-        } else {
-            // draw the marks in console and DOM
-            board[row][cell] = currPlayer.mark;
-            if (dom) {
-                const img = document.createElement('img');
-                img.setAttribute('src', `./assets/${currPlayer.mark.toLowerCase()}-icon.svg`);
-                event.target.appendChild(img);
-            }
+            return;
         }
 
-        console.log(board);
-        display(board);
+        // make the move
+        board[row][cell] = currPlayer.mark;
+
+        // draw the marks in console and DOM
+        for (arr of board) {
+            console.log(arr.join(' | '));
+        }
+
+        // guard to don't break app when playing from console
+        if (dom) {
+            const img = document.createElement('img');
+            img.setAttribute('src', `./assets/${currPlayer.mark.toLowerCase()}-icon.svg`);
+            event.target.appendChild(img);
+        }
         checkWinner(row, cell);
         currPlayer = (currPlayer == player1) ? player2 : player1;
     }
@@ -157,9 +161,3 @@ const gameController = (function() {
 
     return {playRound};
 })();
-
-function display(board) {
-    for (row of board) {
-        console.log(row.join(' | '));
-    }
-}
