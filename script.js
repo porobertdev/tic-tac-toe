@@ -55,8 +55,17 @@ const gameController = (function() {
     }
 
     // create players
-    function createPlayer(name, mark) {
-        return {name, mark};
+    function createPlayer(name, mark, score = 0) {
+
+        const scoreElement = document.querySelector(`.score.${name}`);
+        // set initial score
+        scoreElement.textContent = 0;
+
+        function updateScore() {
+            this.score += 1;
+            scoreElement.textContent = this.score; // closure
+        }
+        return {name, mark, score, updateScore};
     }
 
     const player1 = createPlayer('player1', 'X');
@@ -152,6 +161,7 @@ const gameController = (function() {
             console.log(`combos: ${combos} - direction: ${direction} - markCount: ${markCount}`);
             
             if (markCount == boardSize) {
+                currPlayer.updateScore();
                 alert('YOU WON');
                 manageEvent('remove');
                 return;
