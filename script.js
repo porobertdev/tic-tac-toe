@@ -140,7 +140,11 @@ const gameController = (function() {
                 }
             }
 
-            playRound(row, cell, true);
+            // check console board to see if cell is empty
+            // @TO DO: use DOM? like e.srcElement.children.length
+            if (board[row][cell] == '') {
+                playRound(row, cell, true);
+            }
         }
 
         function inputHandler(e) {
