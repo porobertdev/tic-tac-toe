@@ -174,3 +174,42 @@ button.play:hover {
 .score.player2 {
     color: var(--clr-red);
 }
+
+@media only screen and (max-width: 768px) {
+    
+    body {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    #title {
+        margin-top: 5rem;
+    }
+
+    .game-menu {
+        font-size: 1.2rem;
+    }
+
+    .game-menu form {
+        gap: 2rem;
+    }
+
+    .game-menu input,
+    button {
+        padding: 1.5rem;
+    }
+
+    .game-menu input[type='text'] {
+        font-size: 1rem;
+    }
+
+    .game-container {
+        width: auto;
+    }
+
+    .cell {
+        width: 32vw;
+        height: 15vh;
+    }
+}
