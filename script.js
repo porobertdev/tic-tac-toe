@@ -40,12 +40,19 @@ const gameBoard = (function (testBoard) {
         getEmptyCells,
         getSize
     };
-})(true);
+})(false);
 
 const gameController = (function() {
 
     // get board
     const board = gameBoard.getBoard();
+
+    const domBoard = Array.from(document.querySelectorAll('.cell'));
+
+    // create nested arrays to match rows * columns board
+    for (i = 0; i < 3; i++) {
+        domBoard.splice(i, 3, domBoard.slice(i, i + 3))
+    }
 
     // create players
     function createPlayer(name, mark) {
@@ -60,15 +67,20 @@ const gameController = (function() {
     const boardSize = gameBoard.getSize().columns;
     let combos;
     let markCount;
+    manageEvent('add');
 
-    function playRound(row, cell) {
-        // row & cell required to play from the console
+    function playRound(row, cell, dom) {
 
         if (gameBoard.getEmptyCells() == 0) {
             // game ends
         } else {
-            // update player of the round
+            // draw the marks in console and DOM
             board[row][cell] = currPlayer.mark;
+            if (dom) {
+                const img = document.createElement('img');
+                img.setAttribute('src', `./assets/${currPlayer.mark.toLowerCase()}-icon.svg`);
+                event.target.appendChild(img);
+            }
         }
 
         console.log(board);
@@ -77,8 +89,35 @@ const gameController = (function() {
         currPlayer = (currPlayer == player1) ? player2 : player1;
     }
 
-    function checkWinner(row, cell) {
+    function manageEvent(type) {
 
+        domBoard.forEach( subArr => {
+
+            subArr.forEach( cell => {
+                if (type == 'add') {
+                    cell.addEventListener('click', eventHandler);
+                } else if (type == 'remove') {
+                    cell.removeEventListener('click', eventHandler);
+                }
+            });
+        });
+
+        function eventHandler(e) {
+            // find where the click was done
+            for (i = 0; i < domBoard.length; i++) {
+                if (domBoard[i].includes(e.srcElement)) {
+                    row = i;
+                    cell = domBoard[i].indexOf(e.srcElement);
+                    break;
+                }
+            }
+
+            playRound(row, cell, true);
+        }
+    }
+
+    function checkWinner(row, cell) {
+        
         console.log(`current mark: ${currPlayer.mark}`)
         for (direction of ['row', 'column', 'diagonal-r', 'diagonal-l']) {
             // reset for the new iteration
@@ -100,6 +139,7 @@ const gameController = (function() {
                         // boardSize - 1 because index starts from 0
                         combos += board[i][boardSize - 1 - i];
                     }
+                    console.log(combos);
             }
 
             // check how many marks are in the current direction
@@ -109,6 +149,7 @@ const gameController = (function() {
             
             if (markCount == boardSize) {
                 alert('YOU WON');
+                manageEvent('remove');
                 return;
             }
         }
