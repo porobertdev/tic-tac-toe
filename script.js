@@ -75,6 +75,8 @@ const gameController = (function() {
     const menu = document.querySelector('.game-menu');
     const inputs = document.querySelectorAll('input[type="text"]');
     const play = document.querySelector('button.play');
+    const modal = document.querySelector('#modal');
+    const modalBtn = document.querySelectorAll('#modal button');
 
     /*  player names are updated after starting the game,
         but we need the objects for the event trigger
@@ -130,6 +132,8 @@ const gameController = (function() {
         
         play[type]('click', playHandler);
 
+        modalBtn.forEach( btn => btn[type]('click', modalBtnHandler));
+
         function boardHandler(e) {
             // find where the click was done
             for (i = 0; i < domBoard.length; i++) {
@@ -171,6 +175,16 @@ const gameController = (function() {
             rectangle.classList.add(player1.pseudo);
             
         }
+
+        function modalBtnHandler(e) {
+            if (e.target.textContent == 'New Round') {
+                modal.classList.toggle('hidden');
+                resetBoard();
+            } else {
+                // simply reload the page
+                window.location.reload();
+            }
+        }
     }
 
     function checkWinner(row, cell) {
@@ -206,6 +220,7 @@ const gameController = (function() {
             
             if (markCount == boardSize) {
                 currPlayer.updateScore();
+                modal.classList.toggle('hidden');
                 alert('YOU WON');
                 manageEvent('removeEventListener');
                 return;
@@ -231,6 +246,22 @@ const gameController = (function() {
         rectangle.children[0].textContent = currPlayer.name;
         // mark node
         rectangle.children[1].setAttribute('src', `./assets/${currPlayer.mark}-status-icon.svg`);
+    }
+
+    function resetBoard() {
+        board.forEach( row => {
+            for(i = 0; i < gameBoard.getSize().rows; i++) {
+                row[i] = '';
+            }
+        });
+
+        domBoard.forEach( row => {
+            row.forEach(cell => {
+                if (cell.childNodes.length != 0) {
+                    cell.removeChild(cell.childNodes[0]);
+                }
+            });
+        })
     }
 
     return {playRound};
