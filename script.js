@@ -57,7 +57,10 @@ const gameController = (function() {
     // create players
     function createPlayer(name, mark, score = 0) {
 
-        const scoreElement = document.querySelector(`.score.${name}`);
+        // used to update the rectangle for `game-status`
+        const pseudo = (mark == 'x') ? 'player1' : 'player2';
+
+        const scoreElement = document.querySelector(`.score.${pseudo}`);
         // set initial score
         scoreElement.textContent = 0;
 
@@ -65,19 +68,28 @@ const gameController = (function() {
             this.score += 1;
             scoreElement.textContent = this.score; // closure
         }
-        return {name, mark, score, updateScore};
+        return {name, pseudo, mark, score, updateScore};
     }
+
+    const boardSize = gameBoard.getSize().columns;
+    const gameContainer = document.querySelector('.game-container');
+    const rectangle = document.querySelector('.game-status .rectangle');
+    const playerName = document.querySelector('span.player-name');
+    const menu = document.querySelector('.game-menu');
+    const inputs = document.querySelectorAll('input[type="text"]');
+    const play = document.querySelector('button.play');
 
     const player1 = createPlayer('player1', 'x');
     const player2 = createPlayer('player2', 'o');
+
     // set first player
     let currPlayer = player1;
 
-    const boardSize = gameBoard.getSize().columns;
-    const rectangle = document.querySelector('.game-status .rectangle');
     let combos;
     let markCount;
-    manageEvent('add');
+
+    // add event listeners
+    ['input', 'play', 'dom'].forEach( target => manageEvent(target, 'add'));
 
     function playRound(row, cell, dom) {
 
@@ -100,30 +112,37 @@ const gameController = (function() {
             event.target.appendChild(img);
         }
         checkWinner(row, cell);
-
-        // change turn
-        // rectangle.classList.add(currPlayer.name);
-        // console.log(rectangle.children[0]);
-        // rectangle.children[0].textContent = currPlayer.name; // name node
-        // rectangle.children[1].setAttribute('src', `./assets/${currPlayer.mark}-status-icon.svg`);
-        // currPlayer = (currPlayer == player1) ? player2 : player1;
         changeTurn();
     }
 
-    function manageEvent(type) {
+    function manageEvent(target, type) {
 
-        domBoard.forEach( subArr => {
+        switch (true) {
+            case (target == 'dom'):
+                domBoard.forEach( subArr => {
 
-            subArr.forEach( cell => {
-                if (type == 'add') {
-                    cell.addEventListener('click', eventHandler);
-                } else if (type == 'remove') {
-                    cell.removeEventListener('click', eventHandler);
-                }
-            });
-        });
+                    subArr.forEach( cell => {
+                        if (type == 'add') {
+                            cell.addEventListener('click', boardHandler);
+                        } else if (type == 'remove') {
+                            cell.removeEventListener('click', boardHandler);
+                        }
+                    });
+                });
+                break;
+        
+            case (target == 'input'):
+                inputs.forEach( input => {
+                    input.addEventListener('input', inputHandler);
+                });
+                break;
 
-        function eventHandler(e) {
+            case (target == 'play'):
+                play.addEventListener('click', playHandler);
+    }
+
+
+        function boardHandler(e) {
             // find where the click was done
             for (i = 0; i < domBoard.length; i++) {
                 if (domBoard[i].includes(e.srcElement)) {
@@ -134,6 +153,31 @@ const gameController = (function() {
             }
 
             playRound(row, cell, true);
+        }
+
+        function inputHandler(e) {
+            if (inputs[0].value != '' && inputs[1].value != '') {
+                play.classList.remove('hidden');
+            } else {
+                play.classList.add('hidden');
+            }
+        }
+
+        function playHandler(e) {
+            [menu, gameContainer].forEach( item => item.classList.toggle('hidden'));
+
+            /*
+                objects gets created before the event trigger occurs,
+                so we need to update the names now, because initial
+                names are plain 'player1' and 'player2'
+            */
+            player1.name = inputs[0].value;
+            player2.name = inputs[1].value;
+
+            // set initial UI for `game-status` @HTML
+            playerName.textContent = player1.name;
+            rectangle.classList.add(player1.pseudo);
+            
         }
     }
 
@@ -171,7 +215,7 @@ const gameController = (function() {
             if (markCount == boardSize) {
                 currPlayer.updateScore();
                 alert('YOU WON');
-                manageEvent('remove');
+                manageEvent('dom', 'remove');
                 return;
             }
         }
@@ -187,9 +231,9 @@ const gameController = (function() {
                    duplicated code.
         */
 
-        rectangle.classList.toggle(currPlayer.name);
+        rectangle.classList.toggle(currPlayer.pseudo);
         currPlayer = (currPlayer == player1) ? player2 : player1;
-        rectangle.classList.toggle(currPlayer.name);
+        rectangle.classList.toggle(currPlayer.pseudo);
 
         // name node
         rectangle.children[0].textContent = currPlayer.name;

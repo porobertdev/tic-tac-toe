@@ -1,9 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Rowdies:wght@300;400;700&display=swap');
 
 :root {
     --clr-border: #D8D8D8;
     --clr-red: #FF7474;
     --clr-blue: #7CA8FF;
+    --clr-title: #DA4D4D;
+
+    --bkg-btn: linear-gradient(0deg, rgba(255, 116, 116, 0.2), rgba(255, 116, 116, 0.2)), #7CA8FF;
+    --bkg-btn-hover: linear-gradient(0deg, rgba(255, 0, 0, 0.2), rgba(255, 0, 0, 0.2)), #7CA8FF;
 }
 
 * {
@@ -12,6 +16,33 @@
 
 body {
     font-family: 'Inter';
+}
+
+input {
+    appearance: none;
+    border: none;
+    outline: none;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.645);
+}
+
+input:focus {
+    border: 2px solid black;
+}
+
+button {
+    appearance: none;
+    background: none;
+    border: none;
+}
+
+input[type="text"],
+button {
+    padding: 1rem;
+    border-radius: 100px;
+    color: white;
 }
 
 .flex {
@@ -30,9 +61,58 @@ body {
     }
 }
 
+h1#title {
+    font-family: 'Rowdies';
+    font-size: 4rem;
+    color: var(--clr-title);
+
+    text-align: center;
+}
+
+.game-menu {
+    gap: 2rem;
+}
+
+.game-menu form {
+    gap: 1.4rem;
+}
+
+form div {
+    gap: 0.5rem;
+}
+
+input#player1 {
+    background-color: var(--clr-blue);
+
+}
+input#player2 {
+    background-color: var(--clr-red);
+}
+
+input#rounds {
+    width: 30%;
+}
+
+button.play {
+    background: var(--bkg-btn);
+    margin-top: 1rem;
+
+    /* half of the <form>'s size, so half of inputs */
+    width: 50%;
+}
+
+button.play:hover {
+    background: var(--bkg-btn-hover);
+    cursor: pointer;
+}
+
 .game-container {
     width: 30vw;
-    margin: 15vh auto;
+    margin: 1vh auto;
+}
+
+.hidden{
+    display: none;
 }
 
 .board {
@@ -60,7 +140,6 @@ body {
 }
 
 .rectangle {
-    background-color: var(--clr-red);
     color: white;
     
     padding: 0.6rem;

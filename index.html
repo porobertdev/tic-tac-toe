@@ -8,8 +8,28 @@
     <script defer src="./script.js"></script>
 </head>
 <body>
-    
-    <div class="game-container">
+
+
+    <h1 id="title">Tic Tac Toe</h1>
+    <!-- main menu -->
+    <div class="game-menu flex flex-d-c flex-ai-c">
+
+        <form action="" class="flex flex-d-c flex-ai-c">
+            <div class="flex flex-d-c">
+                <label for="player1">Player1:</label>
+                <input type="text" name="player1_name" id="player1" placeholder="name">
+            </div>
+
+            <div class="flex flex-d-c">
+                <label for="player2">Player2:</label>
+                <input type="text" name="player2_name" id="player2" placeholder="name">
+            </div>
+
+            <button class="play hidden" type="button">PLAY</button>
+        </form>
+    </div>
+
+    <div class="game-container hidden">
         <div class="board">
             <div class="cell border-right border-bottom flex flex-jc-c"></div>
             <div class="cell border-right border-bottom flex flex-jc-c"></div>
@@ -23,8 +43,8 @@
         </div>
         <div class="game-status flex flex-jc-c flex-ai-c">
             <span class="score player1"></span>
-            <div class="rectangle player1 flex flex-jc-c flex-ai-c">
-                <span class="player-name">player1</span>
+            <div class="rectangle flex flex-jc-c flex-ai-c">
+                <span class="player-name"></span>
                 <img src="./assets/x-status-icon.svg" alt="">
             </div>
             <span class="score player2"></span>
