@@ -137,7 +137,7 @@ button.new-game:hover {
     display: none;
 }
 
-.board {
+.row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
@@ -264,5 +264,94 @@ button.new-game:hover {
         width: 60%;
 
         font-size: 1.3rem;
+    }
+}
+
+.row {
+    position: relative;
+}
+
+hr.line {
+    position: absolute;
+    top: 90%;
+    transform-origin: 105%;
+
+    rotate: 90deg;
+
+    border: 2px solid #1100FF;
+    border-radius: 10px;
+    width: 80%;
+    height: 1rem;
+  /*   background: #D9D9D9; */
+    background: white;
+    /* transform: rotate(0deg); */
+    animation: pulse 2s infinite, move 0.8s linear;
+}
+
+/* was thinking about adding `pulse` class to cells
+   instead of a line */
+/* .pulse {
+    animation: pulse 0.5s infinite;
+    transform: rotate(45deg);
+} */
+
+@keyframes pulse {
+    0% {
+  /*     -moz-box-shadow: 0px 0px 30px #1100FF; */
+      box-shadow: 0px 0px 20px 5px #1100FF;
+    }
+    70% {
+  /*       -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0); */
+        box-shadow: 0px 0px 30px 10px #1100FF;
+    }
+    100% {
+  /*       -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0); */
+        box-shadow: 0px 0px 20px #1100FF;
+    }
+}
+
+@keyframes move {
+    0% {
+        transform: scaleX(0%);
+    }
+
+    10% {
+        transform: scaleX(10%);
+    }
+
+    20% {
+        transform: scaleX(20%);
+    }
+    
+    30% {
+        transform: scaleX(30%);
+    }
+
+    40% {
+        transform: scaleX(40%);
+    }
+
+    50% {
+        transform: scaleX(50%);
+    }
+
+    60% {
+        transform: scaleX(60%);
+    }
+
+    70% {
+        transform: scaleX(70%);
+    }
+
+    80% {
+        transform: scaleX(80%);
+    }
+
+    90% {
+        transform: scaleX(90%);
+    }
+
+    100% {
+        transform: scaleX(100%);
     }
 }

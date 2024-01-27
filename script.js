@@ -220,7 +220,7 @@ const gameController = (function() {
             
             if (markCount == boardSize) {
                 currPlayer.updateScore();
-                modal.classList.toggle('hidden');
+                // modal.classList.toggle('hidden');
                 alert('YOU WON');
                 manageEvent('removeEventListener');
                 return;
