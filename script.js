@@ -121,17 +121,21 @@ const gameController = (function() {
 
     function manageEvent(type) {
 
+        // domboard
         domBoard.forEach( row => {
             row.forEach( cell => {
                 cell[type]('click', boardHandler);
             })});
 
+        // input boxes
         inputs.forEach( input => {
             input[type]('input', inputHandler);
         });
         
+        // play btn
         play[type]('click', playHandler);
 
+        // modal
         modalBtn.forEach( btn => btn[type]('click', modalBtnHandler));
 
         function boardHandler(e) {

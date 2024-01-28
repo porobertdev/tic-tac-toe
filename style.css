@@ -17,6 +17,7 @@
 }
 
 body {
+    margin: 0;
     font-family: 'Inter';
     user-select: none;
 }
@@ -55,12 +56,43 @@ button {
         justify-content: center;
     }
 
+    &.flex-jc-r {
+        justify-content: right;
+    }
+
     &.flex-ai-c {
         align-items: center;
     }
 
     &.flex-d-c {
         flex-direction: column;
+    }
+}
+
+header {
+    
+    & .corner {
+        width: 15rem;
+        position: absolute;
+    }
+
+    & .github {
+        width: 4.5rem;
+        position: absolute;
+        top: 2.5%;
+        left: 92.8%;
+    }
+    
+    & .github.spin:hover {
+        /* animation: spin 1s; */
+        width: 5rem;
+        transform: rotate(360deg);
+        transition: 1s;
+    }
+    
+    & .github.unspin {
+        transform: rotate(-360deg);
+        transition: 1s;
     }
 }
 
@@ -223,6 +255,23 @@ button.new-game:hover {
         display: flex;
         flex-direction: column;
         gap: 2rem;
+    }
+
+    header {
+        & .corner {
+            width: 10rem;
+        }
+
+        & .github {
+            width: 3rem;
+            position: absolute;
+            top: 1%;
+            left: 85%;
+        }
+        
+        & .github.spin:hover {
+            width: 3.5rem;
+        }
     }
 
     #title {
@@ -402,5 +451,16 @@ span.strike {
 
     100% {
         transform: scaleX(100%);
+    }
+}
+
+@keyframes spin {
+    0% {
+        rotate: 0%;
+      }
+
+    90% {
+        width: 5rem;
+        rotate: 360deg;
     }
 }
