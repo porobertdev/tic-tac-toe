@@ -220,6 +220,24 @@ const gameController = (function() {
             
             if (markCount == boardSize) {
                 currPlayer.updateScore();
+                const strike = document.querySelector('.strike');
+
+                // we need to add 'player1/2' class to choose the color
+                strike.classList.toggle(currPlayer.pseudo);
+
+                switch (true) {
+                    case (direction.includes('diagonal')):
+                        strike.classList.toggle(direction);
+                        break;
+                    case (direction == 'row'):
+                        strike.classList.toggle(`${direction}-${row + 1}`);
+                        break;
+                    case (direction == 'column'):
+                        strike.classList.toggle(`${direction}-${cell + 1}`);
+                        break;
+                }
+
+                strike.classList.toggle('hidden');
                 modal.classList.toggle('hidden');
                 alert('YOU WON');
                 manageEvent('removeEventListener');
