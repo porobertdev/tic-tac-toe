@@ -67,6 +67,7 @@ const gameController = (function() {
     const board = gameBoard.console;
     const domBoard = gameBoard.dom;
     const boardSize = gameBoard.getSize().columns;
+    const directions = ['row', 'column', 'diagonal-r', 'diagonal-l'];
 
     // DOM
     const gameContainer = document.querySelector('.game-container');
@@ -75,8 +76,10 @@ const gameController = (function() {
     const menu = document.querySelector('.game-menu');
     const inputs = document.querySelectorAll('input[type="text"]');
     const play = document.querySelector('button.play');
-    const modal = document.querySelector('#modal');
-    const modalBtn = document.querySelectorAll('#modal button');
+    const endGame = document.querySelector('.end-game');
+    const strike = document.querySelector('.strike');
+    const newGame = document.querySelector('.reset');
+    const next = document.querySelector('.next');
 
     /*  player names are updated after starting the game,
         but we need the objects for the event trigger
@@ -135,8 +138,8 @@ const gameController = (function() {
         // play btn
         play[type]('click', playHandler);
 
-        // modal
-        modalBtn.forEach( btn => btn[type]('click', modalBtnHandler));
+        // game over
+        [newGame, next].forEach( selector => selector[type]('click', gameOverHandler));
 
         function boardHandler(e) {
             // find where the click was done
@@ -180,9 +183,8 @@ const gameController = (function() {
             
         }
 
-        function modalBtnHandler(e) {
-            if (e.target.textContent == 'New Round') {
-                modal.classList.toggle('hidden');
+        function gameOverHandler(e) {
+            if (e.target.className == 'next') {
                 resetBoard();
             } else {
                 // simply reload the page
@@ -194,7 +196,7 @@ const gameController = (function() {
     function checkWinner(row, cell) {
         
         console.log(`current mark: ${currPlayer.mark}`)
-        for (direction of ['row', 'column', 'diagonal-r', 'diagonal-l']) {
+        for (direction of directions) {
             // reset for the new iteration
             combos = '';
             markCount = 0;
@@ -242,8 +244,7 @@ const gameController = (function() {
                 }
 
                 strike.classList.toggle('hidden');
-                modal.classList.toggle('hidden');
-                alert('YOU WON');
+                endGame.classList.toggle('hidden');
                 manageEvent('removeEventListener');
                 return;
             }
@@ -271,6 +272,14 @@ const gameController = (function() {
     }
 
     function resetBoard() {
+
+        // reset strike's classes
+        strike.classList.value = 'strike';
+
+        // hide/show
+        strike.classList.toggle('hidden');
+        endGame.classList.toggle('hidden');
+
         board.forEach( row => {
             for(i = 0; i < gameBoard.getSize().rows; i++) {
                 row[i] = '';

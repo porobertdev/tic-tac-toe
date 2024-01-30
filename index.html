@@ -36,17 +36,23 @@
     </div>
 
     <div class="game-container hidden">
-        <div class="board">
-            <div class="cell border-right border-bottom flex flex-jc-c"></div>
-            <div class="cell border-right border-bottom flex flex-jc-c"></div>
-            <div class="cell border-bottom flex flex-jc-c"></div>
-            <div class="cell border-right border-bottom flex flex-jc-c"></div>
-            <div class="cell border-right border-bottom flex flex-jc-c"></div>
-            <div class="cell border-bottom flex flex-jc-c"></div>
-            <div class="cell border-right flex flex-jc-c"></div>
-            <div class="cell border-right flex flex-jc-c"></div>
-            <div class="cell flex flex-jc-c"></div>
-            <span class="strike hidden">
+        <div class="top flex flex-ai-c">
+            <div class="board">
+                <div class="cell border-right border-bottom flex flex-jc-c"></div>
+                <div class="cell border-right border-bottom flex flex-jc-c"></div>
+                <div class="cell border-bottom flex flex-jc-c"></div>
+                <div class="cell border-right border-bottom flex flex-jc-c"></div>
+                <div class="cell border-right border-bottom flex flex-jc-c"></div>
+                <div class="cell border-bottom flex flex-jc-c"></div>
+                <div class="cell border-right flex flex-jc-c"></div>
+                <div class="cell border-right flex flex-jc-c"></div>
+                <div class="cell flex flex-jc-c"></div>
+                <span class="strike hidden">
+            </div>
+            <div class="end-game flex flex-d-c hidden">
+                <img class="reset" src="./assets/reset.svg" alt="">
+                <img class="next" src="./assets/next.svg" alt="">
+            </div>
         </div>
         <div class="game-status flex flex-jc-c flex-ai-c">
             <span class="score player1"></span>
@@ -55,13 +61,6 @@
                 <img src="./assets/x-status-icon.svg" alt="">
             </div>
             <span class="score player2"></span>
-        </div>
-
-        <div id="modal" class="hidden">
-            <div class="content flex flex-d-c flex-jc-c flex-ai-c">
-                <button class="new-round">New Round</button>
-                <button class="new-game">New Game</button>
-            </div>
         </div>
     </div>
 
