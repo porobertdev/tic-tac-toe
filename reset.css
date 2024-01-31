@@ -1,0 +1,36 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter';
+    user-select: none;
+}
+
+input {
+    appearance: none;
+    border: none;
+    outline: none;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.645);
+}
+
+input:focus {
+    border: 2px solid black;
+}
+
+button {
+    appearance: none;
+    background: none;
+    border: none;
+}
+
+input[type="text"],
+button {
+    padding: 1rem;
+    border-radius: 100px;
+    color: white;
+}
