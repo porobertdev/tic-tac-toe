@@ -93,6 +93,7 @@ const gameController = (function() {
     // used in checkWinner()'s loop
     let combos;
     let markCount;
+    let roundOver;
 
     // add event listeners
     manageEvent('addEventListener');
@@ -102,7 +103,7 @@ const gameController = (function() {
         if (gameBoard.getEmptyCells() == 0) {
             return;
         }
-
+        
         // make the move
         board[row][cell] = currPlayer.mark;
 
@@ -153,7 +154,7 @@ const gameController = (function() {
 
             // check console board to see if cell is empty
             // @TO DO: use DOM? like e.srcElement.children.length
-            if (board[row][cell] == '') {
+            if (board[row][cell] == '' && !roundOver) {
                 playRound(row, cell, true);
             }
         }
@@ -226,6 +227,8 @@ const gameController = (function() {
             
             if (markCount == boardSize) {
                 currPlayer.updateScore();
+                roundOver = true;
+                
                 const strike = document.querySelector('.strike');
 
                 // we need to add 'player1/2' class to choose the color
@@ -272,6 +275,8 @@ const gameController = (function() {
     }
 
     function resetBoard() {
+
+        roundOver = false;
 
         // reset strike's classes
         strike.classList.value = 'strike';
