@@ -47,20 +47,15 @@ const gameBoard = (function () {
 const gameController = (function() {
 
     // create players
-    function createPlayer(name, mark, score = 0) {
+    function createPlayer(pseudoName, mark, score = 0) {
 
-        // used to update the rectangle for `game-status`
-        const pseudo = (mark == 'x') ? 'player1' : 'player2';
-
-        const scoreElement = document.querySelector(`.score.${pseudo}`);
-        // set initial score
-        scoreElement.textContent = 0;
+        const scoreElement = document.querySelector(`.score.${pseudoName}`);
 
         function updateScore() {
             this.score += 1;
             scoreElement.textContent = this.score; // closure
         }
-        return {name, pseudo, mark, score, updateScore};
+        return {pseudoName, mark, score, updateScore};
     }
 
     // board info
@@ -73,13 +68,14 @@ const gameController = (function() {
     const gameContainer = document.querySelector('.game-container');
     const rectangle = document.querySelector('.game-status .rectangle');
     const playerName = document.querySelector('span.player-name');
+    const markImg = document.querySelector('img.mark');
     const menu = document.querySelector('.game-menu');
     const inputs = document.querySelectorAll('input[type="text"]');
-    const play = document.querySelector('button.play');
+    const playBtn = document.querySelector('button.play');
     const endGame = document.querySelector('.end-game');
     const strike = document.querySelector('.strike');
-    const newGame = document.querySelector('.reset');
-    const next = document.querySelector('.next');
+    const newGameBtn = document.querySelector('.reset');
+    const newRoundBtn = document.querySelector('.next');
 
     /*  player names are updated after starting the game,
         but we need the objects for the event trigger
@@ -89,10 +85,6 @@ const gameController = (function() {
 
     // set first player
     let currPlayer = player1;
-
-    // used in checkWinner()'s loop
-    let combos;
-    let markCount;
     let roundOver;
 
     // add event listeners
@@ -136,11 +128,10 @@ const gameController = (function() {
             input[type]('input', inputHandler);
         });
         
-        // play btn
-        play[type]('click', playHandler);
+        playBtn[type]('click', playHandler);
 
         // game over
-        [newGame, next].forEach( selector => selector[type]('click', gameOverHandler));
+        [newGameBtn, newRoundBtn].forEach( selector => selector[type]('click', gameOverHandler));
 
         function boardHandler(e) {
             // find where the click was done
@@ -161,15 +152,14 @@ const gameController = (function() {
 
         function inputHandler(e) {
             if (inputs[0].value != '' && inputs[1].value != '') {
-                play.classList.remove('hidden');
+                playBtn.classList.remove('hidden');
             } else {
-                play.classList.add('hidden');
+                playBtn.classList.add('hidden');
             }
         }
 
         function playHandler(e) {
             [menu, gameContainer].forEach( item => item.classList.toggle('hidden'));
-
             /*
                 objects gets created before the event trigger occurs,
                 so we need to update the names now, because initial
@@ -180,7 +170,7 @@ const gameController = (function() {
 
             // set initial UI for `game-status` @HTML
             playerName.textContent = player1.name;
-            rectangle.classList.add(player1.pseudo);
+            rectangle.classList.add(player1.pseudoName);
             
         }
 
@@ -195,7 +185,8 @@ const gameController = (function() {
     }
 
     function checkWinner(row, cell) {
-        
+        let combos, markCount, className;
+
         console.log(`current mark: ${currPlayer.mark}`)
         for (direction of directions) {
             // reset for the new iteration
@@ -206,18 +197,18 @@ const gameController = (function() {
                 switch (true) {
                     case (direction == 'row'):
                         combos += board[row][i];
+                        className = `${direction}-${row + 1}`;
                         break;
                     case (direction == 'column'):
                         combos += board[i][cell];
+                        className = `${direction}-${cell + 1}`;
                         break;
-                    case (direction == 'diagonal-r'):
-                        combos += board[i][i];
-                        break;
-                    case (direction == 'diagonal-l'):
+                    case (direction.includes('diagonal')):
                         // boardSize - 1 because index starts from 0
-                        combos += board[i][boardSize - 1 - i];
+                        combos += (direction == 'diagonal-r') ? board[i][i] : board[i][boardSize - 1 - i];
+                        className = direction;
+                        break;
                     }
-                    console.log(combos);
             }
 
             // check how many marks are in the current direction
@@ -228,26 +219,13 @@ const gameController = (function() {
             if (markCount == boardSize) {
                 currPlayer.updateScore();
                 roundOver = true;
-                
-                const strike = document.querySelector('.strike');
 
                 // we need to add 'player1/2' class to choose the color
-                strike.classList.toggle(currPlayer.pseudo);
+                strike.classList.add(currPlayer.pseudoName, className);
 
-                switch (true) {
-                    case (direction.includes('diagonal')):
-                        strike.classList.toggle(direction);
-                        break;
-                    case (direction == 'row'):
-                        strike.classList.toggle(`${direction}-${row + 1}`);
-                        break;
-                    case (direction == 'column'):
-                        strike.classList.toggle(`${direction}-${cell + 1}`);
-                        break;
-                }
+                strike.classList.remove('hidden');
+                endGame.classList.remove('hidden');
 
-                strike.classList.toggle('hidden');
-                endGame.classList.toggle('hidden');
                 manageEvent('removeEventListener');
                 return;
             }
@@ -264,14 +242,14 @@ const gameController = (function() {
                    duplicated code.
         */
 
-        rectangle.classList.toggle(currPlayer.pseudo);
+        rectangle.classList.remove(currPlayer.pseudoName);
         currPlayer = (currPlayer == player1) ? player2 : player1;
-        rectangle.classList.toggle(currPlayer.pseudo);
+        rectangle.classList.add(currPlayer.pseudoName);
 
         // name node
-        rectangle.children[0].textContent = currPlayer.name;
+        playerName.textContent = currPlayer.name;
         // mark node
-        rectangle.children[1].setAttribute('src', `./assets/${currPlayer.mark}-status-icon.svg`);
+        markImg.setAttribute('src', `./assets/${currPlayer.mark}-status-icon.svg`);
     }
 
     function resetBoard() {
@@ -279,11 +257,10 @@ const gameController = (function() {
         roundOver = false;
 
         // reset strike's classes
-        strike.classList.value = 'strike';
+        strike.classList.value = 'strike hidden';
 
         // hide/show
-        strike.classList.toggle('hidden');
-        endGame.classList.toggle('hidden');
+        endGame.classList.add('hidden');
 
         board.forEach( row => {
             for(i = 0; i < gameBoard.getSize().rows; i++) {
